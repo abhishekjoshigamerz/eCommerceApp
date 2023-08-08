@@ -6,7 +6,7 @@ const cors = require('cors');
 const db = require('./config/database');
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(bodyParser.json());
 
 

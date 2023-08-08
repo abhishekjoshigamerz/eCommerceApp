@@ -19,14 +19,13 @@ module.exports.getAllProducts = async(req, res)=> {
 module.exports.createProduct = async (req, res) => {
   try {
     const { name, price, description, categoryId, image } = req.body;
-    console.log(req.body);
     const category = await Category.findById(categoryId);
     if (!category) {
       return res.status(400).json({ message: 'Invalid categoryId. Category not found.' });
     }
 
     // Create a new product
-    const newProduct = new Product({ name, price, description, category: categoryId });
+    const newProduct = new Product({ name, price, description, image,category: categoryId });
     await newProduct.save();
 
     res.status(201).json({ message: 'Product created successfully' });
@@ -37,37 +36,40 @@ module.exports.createProduct = async (req, res) => {
 };
 
 //update a product
+// Update a product
 module.exports.updateProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, price, description, categoryId } = req.body;
-
-    // Check if the category exists
+    const { name, price, description, categoryId, image } = req.body;
+    const productId = req.params.id; 
+    
+    console.log(req.params);
     const category = await Category.findById(categoryId);
     if (!category) {
       return res.status(400).json({ message: 'Invalid categoryId. Category not found.' });
     }
 
-    // Update the product by ID
     const updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      { name, price, description, category: categoryId },
-      { new: true } // Return the updated product
+      productId,
+      {
+        name,
+        price,
+        description,
+        image,
+        category: categoryId
+      },
+      { new: true } // This option returns the updated document
     );
 
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    res.status(200).json(updatedProduct);
+    res.status(200).json({ message: 'Product updated successfully', product: updatedProduct });
   } catch (error) {
     console.error('Error updating product:', error);
     res.status(500).json({ message: 'An error occurred' });
   }
 };
-
-
-
 
 
 //delete a product
@@ -86,3 +88,44 @@ module.exports.deleteProduct = async (req, res) => {
     res.status(500).json({ message: 'An error occurred' });
   }
 };
+
+//get product by price range
+
+module.exports.getProductByPriceRange = async (req, res) => {
+   try {
+    const { minPrice, maxPrice } = req.body;
+    const parsedMinPrice = parseFloat(minPrice);
+    const parsedMaxPrice = parseFloat(maxPrice);
+
+    if (isNaN(parsedMinPrice) || isNaN(parsedMaxPrice)) {
+      return res.status(400).json({ message: 'Invalid minPrice or maxPrice' });
+    }
+
+    const filteredProducts = await Product.find({
+      price: { $gte: parsedMinPrice, $lte: parsedMaxPrice },
+    });
+    console.log(filteredProducts);
+    res.json(filteredProducts);
+  } catch (error) {
+    console.error('Error filtering Products:', error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+}
+
+//get product by category
+
+module.exports.filterProductsByCategories = async (req, res) => {
+  const { categories } = req.body;
+  console.log(categories);
+  try {
+    const filteredProducts = await Product.find({ category: { $in: categories.categories } });
+    
+    res.json(filteredProducts);
+  } catch (error) {
+    console.error('Error filtering products:', error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+};
+
+
+
