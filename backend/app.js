@@ -1,47 +1,22 @@
-//all the required packages
 const express = require('express');
 const mongoose = require('mongoose');
-const db = require('./config/database');
 const bodyParser = require('body-parser');
-const expressLayouts = require('express-ejs-layouts');
-const app = express();
-const port = 5000;
 const cors = require('cors');
-const cookieParser = require('cookie-parser'); 
-const session = require('express-session');
 
-app.use(express.urlencoded({
-  extended: true
-}));
+const db = require('./config/database');
+const app = express();
 
-app.use(cookieParser());
-
-app.use(express.json()); // Parse JSON data
-
-app.use(expressLayouts);
-app.use(express.static('./public/assets/'));
-
-app.use(session({
-  secret:'fullStackEcommerceApplicationBackEnd',
-  resave:false,
-  saveUninitialized:false,
-  resave:false,
-})); 
+app.use(cors());
+app.use(bodyParser.json());
 
 
-
-app.set('view engine', 'ejs');
-app.set('views', './views');
-
-app.set('layout extractStyles', true);
-app.set('layout extractScripts', true);
-
-app.use(bodyParser.urlencoded({ extended: false }))
-
+const PORT = process.env.PORT || 5000;
 
 app.use('/', require('./routes'));
 
 
-app.listen(port, () => {
-    console.log('Server listening on port 5000');
-  });
+
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

@@ -1,11 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const homeController = require('../controller/home/homeController');
+// const productController = require('../controller/product/productController');
+const productController = require('../controller/product/productController');
+const categoryController = require('../controller/category/categoryController');
 
+//get all products
+router.get('/', productController.getAllProducts);
+router.post('/create-products', productController.createProduct);
 
-router.get('/', homeController.home);
+router.post('/update-products/:id', productController.updateProduct);
 
-// router.use('/admin', require('./admin/index'));
-// router.use('/api',require('./api/index'));
+router.get('/delete-products/:id', productController.deleteProduct);
+
+//get all categories 
+
+router.get('/categories', categoryController.getAllCategories);
+router.post('/create-categories',categoryController.createCategory);
+
+router.post('/update-categories/:id',categoryController.updateCategory);
+
+router.get('/delete-categories/:id',categoryController.deleteCategory);
 
 module.exports = router;
