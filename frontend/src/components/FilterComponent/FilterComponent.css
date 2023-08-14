@@ -1,0 +1,41 @@
+.categoryName{
+    min-width: 250px;
+}
+
+.pricingRange{
+    display: flex;
+    flex-direction: row;
+}
+
+.inputBox{
+    width: 100px;
+    margin: 0 10px;
+}
+.customLabelClass{
+    margin: 0 10px;
+    width: 100px;
+
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 10px;
+    /* Adjust the gap between buttons as needed */
+    align-items: center;
+    margin-top:10px;
+}
+
+.filterButton,
+.resetButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.filterButton:hover,
+.resetButton:hover {
+    background-color: #0056b3;
+}

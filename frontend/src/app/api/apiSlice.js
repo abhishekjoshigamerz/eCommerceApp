@@ -13,26 +13,24 @@ export const productApi = createApi({
       query: () => 'categories', // Change this to match your API endpoint for fetching products
     }),
    
-    filterProducts: builder.mutation({
-      query: ({ minPrice, maxPrice }) => ({
-        url: '/product/filterbypricerange', // Update the endpoint URL accordingly
-        method: 'POST',
-        body: {
-          minPrice,
-          maxPrice
-        },
-      }),
+    getFilterProducts: builder.query({
+      
+        query:({range}) =>({
+          url: `/product/filterbypricerange?minPrice=${range.minPrice}&maxPrice=${range.maxPrice}`,
+          method: 'GET',
+        })
     }),
-     filterProductsByCategories: builder.mutation({
+     
+     getFilterProductsByCategories: builder.query({
       query: (categories) => ({
-        url: '/product/filterByCategories', // Adjust the URL
-        method: 'POST',
-        body: { categories },
-      }),
+        
+        url : `/products/filterbycategories/${categories}`,
+        method: 'GET',
+      })
      }),  
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetProductsQuery,useGetCategoryQuery, useFilterProductsMutation,useFilterProductsByCategoriesMutation } = productApi;
+export const { useGetProductsQuery,useGetCategoryQuery,useGetFilterProductsQuery,useGetFilterProductsByCategoriesQuery } = productApi;

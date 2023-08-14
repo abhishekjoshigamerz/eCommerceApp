@@ -2,126 +2,88 @@ import React, { useState,useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { useGetCategoryQuery, useFilterProductsMutation,useFilterProductsByCategoriesMutation } from '../../app/api/apiSlice';
 import { Col } from 'react-bootstrap';
-
-import ProductList from '../ProductList/ProductList';
+import { useDispatch } from 'react-redux';
+import { setSelectedCategories, setPriceRange, resetAllData } from '../../app/filter';
+import './FilterComponent.css';
 
 
 function FilterComponent() {
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(9999999);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const { data: categories, isLoading, isError } = useGetCategoryQuery();
-  const [resetedFilteredProducts,setresetedFilteredProducts] = useState(true);
-  const [finalFilteredProducts, setFinalFilteredProducts] = useState([]);
+  const dispatch = useDispatch();
 
-  const [filterProducts, { data: filteredProducts, isLoading: productsLoading, isError: productsError, isSuccess: filterSuccess }] = useFilterProductsMutation();
-
-  const [filterProductsByCategories, { data: filteredProductsByCategories, isLoading: productsLoadingByCategories, isError: productsErrorByCategories, isSuccess: filterSuccessByCategories }] = useFilterProductsByCategoriesMutation();
-
-
-//   const handleCategoryToggle = async(categoryId) => {
-    
-//     console.log(categoryId + " " + selectedCategories);
-
-//     if(selectedCategories.includes(categoryId)){
-//       alert("Already Selected");
-
-//     }else{
-//         if(selectedCategories.length == 0){
-//             setSelectedCategories([categoryId]);
-//             console.log(selectedCategories);
-//         }else{
-//             console.log(selectedCategories);
-//             setSelectedCategories([...selectedCategories,categoryId]);
-//             console.log(selectedCategories);
-//         }
-        
-//     }
-// };
-
-const handleCategoryToggle = async (categoryId) => {
-
-        
-  setSelectedCategories((prevSelectedCategories) => {
-    const newSelectedCategories = prevSelectedCategories.includes(categoryId)
-      ? prevSelectedCategories.filter((id) => id !== categoryId)
-      : [...prevSelectedCategories, categoryId];
-
-    console.log(categoryId + " " + newSelectedCategories);
-
-    return newSelectedCategories;
-  });
-};
-
-
-
-
-
-
-
+  const [minPrice,setMinPrice] = useState(0);
+  const [maxPrice,setMaxPrice] = useState(0);
+  const [textInput, setTextInput] = useState('');
+  const [radioOption, setRadioOption] = useState('');
+  //redux slice
+  const { data: categories, isLoading, isError, isSuccess } = useGetCategoryQuery();
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
   if (isError) {
-    return <p>Error fetching products</p>;
+    return <p>Error fetching categories</p>;
   }
 
-  const handleFilter = async () => {
-    try {
-      const result = await filterProducts({
-        minPrice,
-        maxPrice,
-      });
+  if(isSuccess){
+    console.log(categories);
+  }
 
-      console.log('Filtered Products:', result);
-      finalFilteredProducts(result.data);
-      setresetedFilteredProducts(false);
-    } catch (error) {
-      console.error('Error filtering products:', error);
+
+  const handleCategoryToggle = (categoryId) => {
+
+    const selectedCategories = [categoryId]; // You
+    console.log(selectedCategories);
+    setRadioOption(categoryId);
+    dispatch(setSelectedCategories(selectedCategories));
+  }
+
+  const handlePriceRangeChange = () => {
+    if(minPrice && maxPrice){ 
+      dispatch(setPriceRange({ minPrice, maxPrice }));
+    }else {
+      alert('Please enter valid price range');
     }
   };
 
-  const resetFilter = async () => {
-    setresetedFilteredProducts(true);
 
-  };
-
+  const resetFilter = () => {
+    dispatch(resetAllData());
+    setMinPrice(''); 
+    setMaxPrice('');
+    setRadioOption('');
+  }
 
   return (
-    <>
-    <Col md={3} className="p-3">
-    <div className='mt-5'>
-      <h3>Filter</h3>
-      <Form.Group>
-        <Form.Label>Category</Form.Label>
-        {categories.map((category) => (
-          <Form.Check
-            key={category.id}
-            type="checkbox"
-            id={category._id}
-            value={category._id}
-            label={category.name}
-            
-            onChange={() => handleCategoryToggle(category._id)}
-          />
-        ))}
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Pricing Range</Form.Label>
-        <br />
-        <input type='text' value={minPrice} onChange={e => setMinPrice(e.target.value)} /> <br /><br />
-        <input type='text' value={maxPrice} onChange={e => setMaxPrice(e.target.value)} /> <br /><br />
-        <input type='button' value='Filter Out' onClick={handleFilter} />
-        <input type='button' value='Filter Out' onClick={resetFilter} />    
-         <br /><br />
-      </Form.Group>
-    </div>
-    </Col>
-    <Col md={9} className="p-3">
-          <ProductList finalFilteredProducts={finalFilteredProducts} resetedFilteredProducts={resetedFilteredProducts} /> {/* Display your ProductList */}
-    </Col>
+     <>
+      <Col md={3} className="p-3">
+        <div className='mt-5'>
+          <h3>Filter</h3>
+          <Form.Group>
+          
+            {categories.map((category) => (
+                <div key={category._id} className='categoryName'>
+                  <input type='radio'  name='selectedCategory'
+                  value = {category._id}  onChange={() => handleCategoryToggle(category._id)}/> {category.name}
+                </div>
+              ))} 
+
+          </Form.Group>
+           <Form.Group>
+        <Form.Label className="customLabelClass">Pricing Range </Form.Label>
+          <br /><br />
+          <div className='pricingRange'>
+            Min: <input type='text' className='inputBox' value={minPrice}  placeholder='$0' onChange={(e)=>setMinPrice(e.target.value)} /> 
+            Max: <input type='text' className='inputBox' value={maxPrice} placeholder='$999999' onChange={(e)=>setMaxPrice(e.target.value)} /> 
+          </div>
+          <div className="buttonContainer">
+            <input type='button' className="filterButton" value='Filter Out' onClick={handlePriceRangeChange} />
+            <input type='button' className="resetButton" value='Reset' onClick={resetFilter} />
+          </div>
+          <br /><br />
+        </Form.Group>    
+        </div>
+      </Col>
     </>
   );
 }

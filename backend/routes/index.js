@@ -15,8 +15,8 @@ router.get('/delete-product/:id', productController.deleteProduct);
 
 //get on the basis of pricing 
 
-router.post('/product/filterbypricerange', productController.getProductByPriceRange);
-router.post('/product/filterByCategories',productController.filterProductsByCategories);
+router.get('/product/filterbypricerange/', productController.getProductByPriceRange);
+router.get('/products/filterbycategories/:categories',productController.filterProductsByCategories);
 
 //get all categories 
 

@@ -4,10 +4,7 @@ const Category = require('../../model/category');
 module.exports.getAllProducts = async(req, res)=> {
     try {
     const products = await Product.find();
-    res.status(200).json({
-        
-      "products":  products
-    });
+    res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ message: 'An error occurred' });
@@ -93,7 +90,8 @@ module.exports.deleteProduct = async (req, res) => {
 
 module.exports.getProductByPriceRange = async (req, res) => {
    try {
-    const { minPrice, maxPrice } = req.body;
+    const { minPrice, maxPrice } = req.query;
+    console.log(minPrice, maxPrice);
     const parsedMinPrice = parseFloat(minPrice);
     const parsedMaxPrice = parseFloat(maxPrice);
 
@@ -115,10 +113,10 @@ module.exports.getProductByPriceRange = async (req, res) => {
 //get product by category
 
 module.exports.filterProductsByCategories = async (req, res) => {
-  const { categories } = req.body;
+  const { categories } = req.params;
   console.log(categories);
   try {
-    const filteredProducts = await Product.find({ category: { $in: categories.categories } });
+    const filteredProducts = await Product.find({ category: { $in: categories } });
     
     res.json(filteredProducts);
   } catch (error) {
