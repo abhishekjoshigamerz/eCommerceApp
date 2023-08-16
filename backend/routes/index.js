@@ -4,7 +4,7 @@ const router = express.Router();
 const productController = require('../controller/product/productController');
 const categoryController = require('../controller/category/categoryController');
 const userController = require('../controller/user/userController');
-
+const transactionController = require('../controller/transaction/transactionController');
 //get all products
 router.get('/product/', productController.getAllProducts);
 router.post('/create-product', productController.createProduct);
@@ -32,5 +32,12 @@ router.get('/delete-categories/:id',categoryController.deleteCategory);
 router.post('/registeruser',userController.registerUser);
 
 router.post('/login',userController.loginUser);
+
+
+//transactions 
+
+router.get('/get-transactions',transactionController.getAllTransactions);
+router.get('/get-transaction-by-id/:id',transactionController.getTransactionById);
+router.post('/create-transaction',transactionController.createTransaction);
 
 module.exports = router;

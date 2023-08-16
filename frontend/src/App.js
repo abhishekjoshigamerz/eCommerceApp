@@ -1,30 +1,21 @@
+import Layout from './components/Layout';
+import Home from './components/Home/Home';
+import Cart from './components/Cart/Cart';
+import Transactions from './components/Transactions/Transactions';
+import TransactionDetail from './components/Transactions/TransactionDetail';
+import { Routes, Route } from 'react-router-dom';
 
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import Header from './components/Header/Header';
 
-import ProductList from './components/ProductList/ProductList'; 
-import FilterComponent from './components/FilterComponent/FilterComponent';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-function App() {
-  return (
-    <Container fluid>
-      <Header />
-      <Row>
-      
-         <Col md={3}>
-          <FilterComponent />
-         </Col>
-        <Col md={9}>
-          <ProductList />
-        </Col> 
-        
-        
-        
-      </Row>
-    </Container>
-  );
+const App = () => {
+ return(  
+  <Routes>
+      <Route path="/" element={<Layout />} />
+      <Route index  element={<Home />} />
+      <Route path='/cart' element={<Cart />} />
+      <Route path='/transactions' element={<Transactions />} />
+      <Route path='/view-transaction-details/:id' element={<TransactionDetail />} />
+   </Routes>
+ );
 }
 
 export default App;

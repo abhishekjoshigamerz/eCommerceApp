@@ -1,0 +1,35 @@
+.cartButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    max-width: 150px;
+    text-decoration: none;
+}
+
+.transactions{
+   
+   
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    max-width: 150px;
+    margin-left:20px;
+    text-decoration: none;
+}
+
+.redColor {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 14px;
+}

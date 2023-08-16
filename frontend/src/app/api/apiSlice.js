@@ -27,10 +27,37 @@ export const productApi = createApi({
         url : `/products/filterbycategories/${categories}`,
         method: 'GET',
       })
-     }),  
+     }),
+
+     getTransactions: builder.query({
+
+      query: () =>({
+        url: '/get-transactions',
+        method: 'GET',
+      }),
+    }),
+
+    getTransactionById: builder.query({
+
+      query: (id) =>({
+        url: `/get-transaction-by-id/${id}`,
+        method: 'GET',
+      }),
+
+    }),
+     
+     createTransaction: builder.mutation({
+      query: (transaction) => ({
+
+        url: '/create-transaction',
+        method: 'POST',
+        body: transaction,
+      }),
+     }),
+
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetProductsQuery,useGetCategoryQuery,useGetFilterProductsQuery,useGetFilterProductsByCategoriesQuery } = productApi;
+export const { useGetProductsQuery,useGetCategoryQuery,useGetFilterProductsQuery,useGetFilterProductsByCategoriesQuery, useCreateTransactionMutation, useGetTransactionsQuery , useGetTransactionByIdQuery } = productApi;
